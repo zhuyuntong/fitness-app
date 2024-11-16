@@ -10,7 +10,7 @@ import {
   User, Play, Dumbbell, Zap, ChevronDown, ChevronUp,
   Settings, History, Video, Activity
 } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+// import { usePathname } from 'next/navigation'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +20,7 @@ import {
 // import ProfilePage from "@/app/profile/page"
 
 export default function HomePage() {
-  const pathname = usePathname()
+//   const pathname = usePathname()
   const [isProgressExpanded, setIsProgressExpanded] = useState(false)
   const [isWorkoutExpanded, setIsWorkoutExpanded] = useState(true)
   const [recommendedVideos] = useState([
