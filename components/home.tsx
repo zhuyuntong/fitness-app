@@ -1,15 +1,14 @@
 'use client'
 
-import { useState, useEffect, Profiler } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+// import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { 
-  User, Play, Home, Dumbbell, LineChart, 
-  MoreHorizontal, Zap, ChevronDown, ChevronUp,
-  Plus, Settings, History, Video, Activity
+  User, Play, Dumbbell, Zap, ChevronDown, ChevronUp,
+  Settings, History, Video, Activity
 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import {
@@ -18,7 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import ProfilePage from "@/app/profile/page"
+// import ProfilePage from "@/app/profile/page"
 
 export default function HomePage() {
   const pathname = usePathname()
