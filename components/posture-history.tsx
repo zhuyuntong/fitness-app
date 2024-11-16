@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+type Period = "week" | "month" | "year"
+
 export default function PostureHistory() {
-  const [period, setPeriod] = useState("week")
+  const [period, setPeriod] = useState<Period>("week")
   const chartData = {
     week: [65, 70, 80, 75, 85, 90, 88],
     month: [60, 65, 70, 75, 80, 85, 90, 88, 85, 82, 80, 78, 75, 72, 70, 68, 65, 62, 60, 58, 55, 52, 50, 48, 45, 42, 40, 38, 35],
@@ -40,7 +42,10 @@ export default function PostureHistory() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Posture Score Trend</CardTitle>
-            <Select value={period} onValueChange={setPeriod}>
+            <Select 
+              value={period} 
+              onValueChange={(value: Period) => setPeriod(value)}
+            >
               <SelectTrigger className="w-24">
                 <SelectValue placeholder="Period" />
               </SelectTrigger>
