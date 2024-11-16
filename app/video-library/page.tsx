@@ -1,5 +1,5 @@
-import QuickWorkoutSelection from "@/components/quick-workout-selection"
+import VideoLibrary from "@/components/video-library"
 
 export default function VideoLibraryPage() {
-  return <QuickWorkoutSelection />
+  return <VideoLibrary />
 }

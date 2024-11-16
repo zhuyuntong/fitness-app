@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Check } from "lucide-react"
 
-export default function PricingStrategy() {
+interface PricingStrategyProps {
+  isPremium?: boolean
+}
+
+export default function PricingStrategy({ isPremium = false }: PricingStrategyProps) {
   return (
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">Choose Your Plan</h1>
@@ -70,7 +74,16 @@ export default function PricingStrategy() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Upgrade to Premium</Button>
+            {/* <Button className="w-full">Upgrade to Premium</Button> */}
+            {isPremium ? (
+              <Button className="w-full" disabled>
+                Current Plan
+              </Button>
+            ) : (
+              <Button className="w-full">
+                Upgrade to Premium
+              </Button>
+            )}
           </CardFooter>
         </Card>
       </div>

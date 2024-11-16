@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+// import { Button } from "@/components/ui/button"
 import { ChevronLeft } from 'lucide-react'
 import Link from "next/link"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
@@ -43,7 +43,7 @@ export default function Activity() {
     <div className="min-h-screen bg-background">
       <div className="container max-w-md mx-auto p-4 space-y-6">
         <header className="flex items-center mb-6">
-          <Link href="/home" className="mr-4">
+          <Link href="/dashboard" className="mr-4">
             <ChevronLeft className="h-6 w-6" />
           </Link>
           <h1 className="text-2xl font-bold">Your activities</h1>

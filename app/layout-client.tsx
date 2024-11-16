@@ -10,11 +10,11 @@ interface RootLayoutClientProps {
 
 export default function RootLayoutClient({ children, fonts }: RootLayoutClientProps) {
   const pathname = usePathname()
-  const isLandingPage = pathname === '/'
+  const noNavPaths = ['/', '/login'] // 移除 '/home'
 
   return (
     <body className={`${fonts} antialiased`}>
-      {isLandingPage ? children : <NavigationLayout>{children}</NavigationLayout>}
+      {noNavPaths.includes(pathname) ? children : <NavigationLayout>{children}</NavigationLayout>}
     </body>
   )
 }

@@ -49,7 +49,7 @@ export default function LoginPage() {
               placeholder="Enter your password"
             />
           </div>
-          <Button className="w-full" onClick={() => window.location.href = '/dashboard'}>
+          <Button className="w-full" onClick={() => window.location.href = '/home'}>
             Login
           </Button>
         </CardContent>

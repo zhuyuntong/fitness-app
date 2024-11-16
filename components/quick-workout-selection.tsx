@@ -23,6 +23,9 @@ export default function QuickWorkoutSelection() {
     { name: "Stretching", description: "Flexibility & recovery", icon: "🧘" },
   ]
 
+  const getSelectedTime = () => selectedTime || 10
+  const getSelectedIntensity = () => selectedIntensity || 'Medium'
+
   return (
     <div className="container max-w-md mx-auto p-4 space-y-6">
       <header className="flex items-center mb-4">
@@ -80,9 +83,13 @@ export default function QuickWorkoutSelection() {
                     <p className="text-sm text-muted-foreground">{workout.description}</p>
                   </div>
                 </div>
-                <Button size="icon" variant="ghost">
-                  <Play className="h-4 w-4" />
-                </Button>
+                <Link 
+                  href={`/available-equipment?type=${encodeURIComponent(workout.name)}&time=${getSelectedTime()}&intensity=${encodeURIComponent(getSelectedIntensity())}`}
+                >
+                  <Button size="icon" variant="ghost">
+                    <Play className="h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
