@@ -1,5 +1,10 @@
+# Webiste Deployment
+https://fitness-app-iota-beige.vercel.app/
+
+# FIGMA Prototype
 https://www.figma.com/design/3zML4DlsWMC071sEbQaf1f/DSCI556-Prototype-Group6?node-id=0-1&node-type=canvas&t=6d1ilR3eIsG7rvP5-0
 
+# Local Deployment Instructions
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
