@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -9,7 +9,7 @@ import { Slider } from "@/components/ui/slider"
 import { 
   ChevronLeft, Activity, Clock, Gauge, Camera, 
   CheckCircle2, AlertCircle, ChevronDown, ChevronUp,
-  Trophy, Target, Play, Rewind, FastForward, Volume2, Maximize2, User, ClipboardList, Medal, Zap, Star, Dumbbell, Calendar, Pause, RotateCcw
+  Trophy, Target, Play, Rewind, FastForward, Volume2, Medal, Zap, Star, Dumbbell, Calendar, Pause, RotateCcw
 } from 'lucide-react'
 import Link from "next/link"
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -20,11 +20,49 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import WearableIntegration from "./wearable-integration"
 import CommunityBoard from "./community-board"
 // import VirtualCoach from "./virtual-coach"
-import PostureChallenges from "./posture-challenges"
-import VideoPlayback from "./video-playback"
-import PersonalizedWorkoutPlan from "./personalized-workout-plan"
-import GamificationWidget from "./gamification-widget"
-import { cn } from "@/lib/utils"
+// import PostureChallenges from "./posture-challenges"
+// import VideoPlayback from "./video-playback"
+// import PersonalizedWorkoutPlan from "./personalized-workout-plan"
+// import GamificationWidget from "./gamification-widget"
+// import { cn } from "@/lib/utils"
+
+// Add type for feedback messages
+type FeedbackMessage = {
+  type: 'warning' | 'success' | 'info';
+  message: string;
+}
+
+// Add status type
+type PostureStatus = 'good' | 'needsImprovement';
+
+// Function to determine posture status
+const getPostureStatus = (angle: number, threshold: number): PostureStatus => {
+  return angle <= threshold ? 'good' : 'needsImprovement';
+};
+
+// Update the grid display with dynamic status
+const PostureAngleCard = ({ 
+  label, 
+  angle, 
+  threshold 
+}: { 
+  label: string; 
+  angle: number; 
+  threshold: number; 
+}) => {
+  const status = getPostureStatus(angle, threshold);
+  return (
+    <div className="p-3 bg-gray-50 rounded-lg">
+      <div className="text-sm font-medium">{label}</div>
+      <div className="text-2xl font-bold">{angle}°</div>
+      <div className={`text-sm ${
+        status === 'good' ? 'text-green-500' : 'text-yellow-500'
+      }`}>
+        {status === 'good' ? 'Good' : 'Needs Improvement'}
+      </div>
+    </div>
+  );
+};
 
 export default function WorkoutDetails() {
   const router = useRouter()
@@ -39,7 +77,7 @@ export default function WorkoutDetails() {
   const [postureScore, setPostureScore] = useState(70)
   const [neckAngle, setNeckAngle] = useState(12)
   const [backAngle, setBackAngle] = useState(8)
-  const [feedbackMessages, setFeedbackMessages] = useState([
+  const [feedbackMessages, setFeedbackMessages] = useState<FeedbackMessage[]>([
     { type: 'success', message: 'Great job! Your back angle is perfect.' },
     { type: 'warning', message: 'Try to keep your neck slightly more upright.' },
     { type: 'info', message: 'You\'ve maintained good posture for 5 minutes!' },
@@ -50,7 +88,7 @@ export default function WorkoutDetails() {
   const [neckAngleThreshold, setNeckAngleThreshold] = useState(15)
   const [backAngleThreshold, setBackAngleThreshold] = useState(10)
   const [arOverlayEnabled, setArOverlayEnabled] = useState(false)
-  const [timeInGoodPosture, setTimeInGoodPosture] = useState(0)
+  // const [timeInGoodPosture, setTimeInGoodPosture] = useState(0)
   const speechSynthesis = useRef<SpeechSynthesis | null>(null)
 
   const exercisesByType = {
@@ -122,9 +160,9 @@ export default function WorkoutDetails() {
   }
 
   // New function to add feedback messages
-  const addFeedbackMessage = (type: 'success' | 'warning' | 'info', message: string) => {
-    setFeedbackMessages(prev => [{type, message}, ...prev].slice(0, 4))
-  }
+  // const addFeedbackMessage = (type: 'success' | 'warning' | 'info', message: string) => {
+  //   setFeedbackMessages(prev => [{type, message}, ...prev].slice(0, 4))
+  // }
 
   // Initialize speechSynthesis after component mounts
   useEffect(() => {
@@ -133,32 +171,101 @@ export default function WorkoutDetails() {
     }
   }, [])
 
-  // Update speakFeedback function to check for speechSynthesis availability
-  const speakFeedback = (message: string) => {
+  // Wrap speakFeedback in useCallback
+  const speakFeedback = useCallback((message: string) => {
     if (voiceGuidanceEnabled && speechSynthesis.current) {
-      const utterance = new SpeechSynthesisUtterance(message)
-      speechSynthesis.current.speak(utterance)
+      const utterance = new SpeechSynthesisUtterance(message);
+      speechSynthesis.current.speak(utterance);
     }
-  }
+  }, [voiceGuidanceEnabled]);
 
-  // Update voice guidance effect to check for speechSynthesis availability
+  // Enhanced feedback generation
+  const updateFeedback = useCallback((neck: number, back: number) => {
+    const newMessages: FeedbackMessage[] = [];
+    
+    // Posture-specific feedback
+    if (neck > neckAngleThreshold) {
+      newMessages.push({ 
+        type: 'warning', 
+        message: neck > neckAngleThreshold + 5 
+          ? 'Your neck is significantly tilted. Try to align it with your spine.' 
+          : 'Try to keep your neck slightly more upright.' 
+      });
+    }
+    
+    if (back > backAngleThreshold) {
+      newMessages.push({ 
+        type: 'warning', 
+        message: back > backAngleThreshold + 5 
+          ? 'Your back needs significant adjustment. Focus on straightening it.' 
+          : 'Please maintain a straighter back position.' 
+      });
+    }
+
+    // Milestone and encouragement messages
+    if (neck <= neckAngleThreshold && back <= backAngleThreshold) {
+      newMessages.push({ type: 'success', message: 'Great job! Your posture is perfect.' });
+    }
+
+    // Add milestone messages periodically
+    if (Math.random() < 0.1) { // 10% chance each update
+      newMessages.push({ 
+        type: 'info', 
+        message: 'Remember: Take short breaks every 30 minutes!' 
+      });
+    }
+
+    // Calculate score
+    const score = Math.round(Math.max(0, 100 - (neck + back) * 2));
+    setPostureScore(Math.min(100, score));
+    
+    setFeedbackMessages(prev => [...newMessages, ...prev].slice(0, 4));
+  }, [neckAngleThreshold, backAngleThreshold]);
+
+  // More realistic angle updates
+  const updatePostureAngles = () => {
+    setNeckAngle(prev => {
+      const change = (Math.random() - 0.5) * 1.5; // Smaller, more realistic changes
+      const newValue = prev + change;
+      return Number(Math.min(Math.max(0, newValue), 30).toFixed(1)); // Clamp between 0-30
+    });
+    
+    setBackAngle(prev => {
+      const change = (Math.random() - 0.5) * 1.5;
+      const newValue = prev + change;
+      return Number(Math.min(Math.max(0, newValue), 30).toFixed(1));
+    });
+  };
+
+  // Update useEffect with updateFeedback dependency
+  useEffect(() => {
+    if (isMonitoring) {
+      const interval = setInterval(() => {
+        updatePostureAngles();
+        updateFeedback(neckAngle, backAngle);
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [isMonitoring, neckAngle, backAngle, updateFeedback]);
+
+  // Update voice guidance effect with speakFeedback dependency
   useEffect(() => {
     if (isMonitoring && voiceGuidanceEnabled && speechSynthesis.current) {
       const interval = setInterval(() => {
         if (neckAngle > neckAngleThreshold) {
-          speakFeedback("Please adjust your neck position")
+          speakFeedback("Please adjust your neck position");
         }
         if (backAngle > backAngleThreshold) {
-          speakFeedback("Remember to maintain a straight back")
+          speakFeedback("Remember to maintain a straight back");
         }
         if (neckAngle <= neckAngleThreshold && backAngle <= backAngleThreshold) {
-          speakFeedback("Great job maintaining good posture")
+          speakFeedback("Great job maintaining good posture");
         }
-      }, 30000)
+      }, 2000);
 
-      return () => clearInterval(interval)
+      return () => clearInterval(interval);
     }
-  }, [isMonitoring, voiceGuidanceEnabled, neckAngle, backAngle, neckAngleThreshold, backAngleThreshold])
+  }, [isMonitoring, voiceGuidanceEnabled, neckAngle, backAngle, neckAngleThreshold, backAngleThreshold, speakFeedback]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -287,7 +394,12 @@ export default function WorkoutDetails() {
                         </div>
                       )}
                       {isMonitoring && arOverlayEnabled && (
-                        <AROverlay neckAngle={neckAngle} backAngle={backAngle} />
+                        <AROverlay 
+                          neckAngle={neckAngle} 
+                          backAngle={backAngle}
+                          neckThreshold={neckAngleThreshold}
+                          backThreshold={backAngleThreshold}
+                        />
                       )}
                     </div>
                     
@@ -311,22 +423,29 @@ export default function WorkoutDetails() {
 
                     {/* Add angle thresholds */}
                     <div className="space-y-2">
-                      <span className="text-sm font-medium">Neck Angle Threshold</span>
+                      <span className="text-sm font-medium">Neck Angle Threshold ({neckAngleThreshold}°)</span>
                       <Slider
-                        min={0}
-                        max={30}
+                        min={5}
+                        max={25}
                         step={1}
                         value={[neckAngleThreshold]}
                         onValueChange={(value) => setNeckAngleThreshold(value[0])}
                       />
-                      <span className="text-sm font-medium">Back Angle Threshold</span>
+                      <p className="text-xs text-muted-foreground">
+                        Recommended: 10-15 degrees
+                      </p>
+                      
+                      <span className="text-sm font-medium">Back Angle Threshold ({backAngleThreshold}°)</span>
                       <Slider
-                        min={0}
-                        max={30}
+                        min={5}
+                        max={20}
                         step={1}
                         value={[backAngleThreshold]}
                         onValueChange={(value) => setBackAngleThreshold(value[0])}
                       />
+                      <p className="text-xs text-muted-foreground">
+                        Recommended: 8-12 degrees
+                      </p>
                     </div>
 
                     <div className="space-y-2">
@@ -338,16 +457,16 @@ export default function WorkoutDetails() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <div className="text-sm font-medium">Neck Angle</div>
-                        <div className="text-2xl font-bold">{neckAngle}°</div>
-                        <div className="text-sm text-green-500">Good</div>
-                      </div>
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <div className="text-sm font-medium">Back Angle</div>
-                        <div className="text-2xl font-bold">{backAngle}°</div>
-                        <div className="text-sm text-green-500">Good</div>
-                      </div>
+                      <PostureAngleCard 
+                        label="Neck Angle" 
+                        angle={neckAngle} 
+                        threshold={neckAngleThreshold} 
+                      />
+                      <PostureAngleCard 
+                        label="Back Angle" 
+                        angle={backAngle} 
+                        threshold={backAngleThreshold} 
+                      />
                     </div>
 
                     <Button 

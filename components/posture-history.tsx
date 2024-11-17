@@ -12,10 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, 
-  Tooltip as RechartsTooltip, ResponsiveContainer, Legend, Area, AreaChart 
+  Tooltip as RechartsTooltip, ResponsiveContainer, Legend, Area, AreaChart, CartesianGrid, XAxis, YAxis 
 } from 'recharts'
 
 type Period = "week" | "month" | "year"
@@ -35,11 +33,11 @@ export default function PostureHistory() {
     month: [60, 65, 70, 75, 80, 85, 90, 88, 85, 82, 80, 78, 75, 72, 70, 68, 65, 62, 60, 58, 55, 52, 50, 48, 45, 42, 40, 38, 35],
     year: [40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 88]
   }
-  const labels = {
-    week: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    month: Array.from({length: 30}, (_, i) => i + 1),
-    year: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  }
+  // const labels = {
+  //   week: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  //   month: Array.from({length: 30}, (_, i) => i + 1),
+  //   year: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  // }
 
   // 添加历史会话数据
   const historicalSessions: PostureSession[] = [
@@ -102,7 +100,15 @@ export default function PostureHistory() {
     ],
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  interface TooltipProps {
+    active?: boolean;
+    payload?: {
+      value: number;
+    }[];
+    label?: string;
+  }
+
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border rounded-lg p-3 shadow-lg">
