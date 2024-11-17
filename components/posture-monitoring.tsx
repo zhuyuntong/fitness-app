@@ -1,26 +1,21 @@
 'use client'
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { 
-  ArrowLeft, Activity, Home, Smartphone, 
-  Trophy, Target, Clock, Calendar, ChevronRight 
+  Activity, Home, Smartphone, 
+  Trophy, Target, Clock, ChevronRight 
 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { cn } from "@/lib/utils"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import PostureTrends from "@/components/posture-trends"
 
 export default function PostureMonitoring() {
-  const router = useRouter()
-  const [currentPostureScore, setCurrentPostureScore] = useState(85)
-  const [postureGoal, setPostureGoal] = useState(90)
-  const [timeInGoodPosture, setTimeInGoodPosture] = useState(7200) // 秒
-  const [timeRange, setTimeRange] = useState('week')
+  const [currentPostureScore] = useState(85)
+  const [postureGoal] = useState(90)
+  const [timeInGoodPosture] = useState(75)
+  const [timeRange] = useState('today')
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
@@ -125,7 +120,7 @@ export default function PostureMonitoring() {
                 <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>You've maintained good posture for 70% of your workout time.</span>
+                <span>You&apos;ve maintained good posture for 70% of your workout time.</span>
               </li>
               <li className="flex items-center space-x-2">
                 <svg className="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
