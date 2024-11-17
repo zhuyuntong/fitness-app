@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { ArrowLeft } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -16,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 type Period = "week" | "month" | "year"
 
 export default function PostureHistory() {
+  const router = useRouter()
   const [period, setPeriod] = useState<Period>("week")
   const chartData = {
     week: [65, 70, 80, 75, 85, 90, 88],
@@ -31,7 +33,12 @@ export default function PostureHistory() {
   return (
     <div className="min-h-screen bg-background px-4 py-6">
       <div className="flex items-center mb-6">
-        <Button variant="ghost" size="icon" className="mr-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="mr-2"
+          onClick={() => router.back()}
+        >
           <ArrowLeft className="h-6 w-6" />
           <span className="sr-only">Back</span>
         </Button>

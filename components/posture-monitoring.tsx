@@ -1,3 +1,6 @@
+'use client'
+
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -5,10 +8,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 
 export default function PostureMonitoring() {
+  const router = useRouter()
+
   return (
     <div className="min-h-screen bg-background px-4 py-6">
       <div className="flex items-center mb-6">
-        <Button variant="ghost" size="icon" className="mr-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="mr-2"
+          onClick={() => router.back()}
+        >
           <ArrowLeft className="h-6 w-6" />
           <span className="sr-only">Back</span>
         </Button>

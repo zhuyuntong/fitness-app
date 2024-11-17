@@ -1,26 +1,22 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-// import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { 
   User, Play, Dumbbell, Zap, ChevronDown, ChevronUp,
-  Settings, History, Video, Activity
+  Settings, History, Video, Activity, Award, Calendar, Clock, Flame, TrendingUp
 } from 'lucide-react'
-// import { usePathname } from 'next/navigation'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-// import ProfilePage from "@/app/profile/page"
 
 export default function HomePage() {
-//   const pathname = usePathname()
   const [isProgressExpanded, setIsProgressExpanded] = useState(false)
   const [isWorkoutExpanded, setIsWorkoutExpanded] = useState(true)
   const [recommendedVideos] = useState([
@@ -42,6 +38,9 @@ export default function HomePage() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
 
+  // 新增：仪表板引用
+  const dashboardRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
@@ -52,6 +51,18 @@ export default function HomePage() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [lastScrollY])
+
+  // 新增：滚动到仪表板部分
+  const scrollToDashboard = () => {
+    dashboardRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  // 检查 URL 是否包含 dashboard 锚点
+  useEffect(() => {
+    if (window.location.hash === '#dashboard') {
+      setTimeout(scrollToDashboard, 100)
+    }
+  }, [])
 
   const moreMenuItems = [
     { icon: <Settings className="w-5 h-5" />, label: "Settings", href: "/profile" },
@@ -239,16 +250,92 @@ export default function HomePage() {
           </section>
         </section>
 
-        <Button 
-          className={`fixed right-4 transition-all duration-300 shadow-lg bg-primary
-            ${showFab ? 'bottom-20 opacity-100' : '-bottom-20 opacity-0'}
-            rounded-full w-12 h-12 hover:scale-110`}
-          size="icon"
-          onClick={() => window.location.href = '/workout-selection'}
-        >
-          <Play className="w-6 h-6" />
-        </Button>
+        {/* 新增：Dashboard 部分 */}
+        <section ref={dashboardRef} className="mt-12 space-y-6" id="dashboard">
+          <h2 className="text-2xl font-bold">Your Dashboard</h2>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Workouts</CardTitle>
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">24</div>
+                <p className="text-xs text-muted-foreground">+2 from last week</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Minutes</CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">360</div>
+                <p className="text-xs text-muted-foreground">+45 from last week</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Calories Burned</CardTitle>
+                <Flame className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">2,400</div>
+                <p className="text-xs text-muted-foreground">+300 from last week</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Streak</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">7 days</div>
+                <p className="text-xs text-muted-foreground">Keep it up!</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Weekly Goal Progress</CardTitle>
+              <CardDescription>3 out of 5 workouts completed</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Progress value={60} className="w-full" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Achievements</CardTitle>
+              <CardDescription>Your latest milestones</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center space-x-4">
+                <Award className="h-8 w-8 text-yellow-500" />
+                <div>
+                  <p className="font-medium">7-Day Streak</p>
+                  <p className="text-sm text-muted-foreground">
+                    Completed workouts for 7 consecutive days
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
       </div>
+
+      <Button 
+        className={`fixed right-4 transition-all duration-300 shadow-lg bg-primary
+          ${showFab ? 'bottom-20 opacity-100' : '-bottom-20 opacity-0'}
+          rounded-full w-12 h-12 hover:scale-110`}
+        size="icon"
+        onClick={() => window.location.href = '/workout-selection'}
+      >
+        <Play className="w-6 h-6" />
+      </Button>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
-import { ArrowLeft, AlertTriangle} from 'lucide-react'
+import { useRouter } from "next/navigation"
+import { ArrowLeft, AlertTriangle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -12,10 +13,17 @@ import {
 import Image from "next/image"
 
 export default function PostureTips() {
+  const router = useRouter()
+
   return (
     <div className="min-h-screen bg-background px-4 py-6">
       <div className="flex items-center mb-6">
-        <Button variant="ghost" size="icon" className="mr-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="mr-2"
+          onClick={() => router.back()}
+        >
           <ArrowLeft className="h-6 w-6" />
           <span className="sr-only">Back</span>
         </Button>

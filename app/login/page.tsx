@@ -3,9 +3,10 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ArrowLeft } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -33,7 +34,7 @@ export default function LoginPage() {
               id="email"
               type="email"
               value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
             />
           </div>
@@ -45,7 +46,7 @@ export default function LoginPage() {
               id="password"
               type="password"
               value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
             />
           </div>
@@ -53,6 +54,18 @@ export default function LoginPage() {
             Login
           </Button>
         </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <Separator className="my-2" />
+          <div className="text-sm text-center text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link 
+              href="/signup" 
+              className="text-primary hover:underline font-medium"
+            >
+              Sign up
+            </Link>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   )
