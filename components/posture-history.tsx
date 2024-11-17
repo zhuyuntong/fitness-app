@@ -13,8 +13,19 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { 
+  LineChart, Line, XAxis, YAxis, CartesianGrid, 
+  Tooltip as RechartsTooltip, ResponsiveContainer, Legend, Area, AreaChart 
+} from 'recharts'
 
 type Period = "week" | "month" | "year"
+
+interface PostureSession {
+  date: string
+  score: number
+  duration: number
+  improvement: number
+}
 
 export default function PostureHistory() {
   const router = useRouter()
@@ -28,6 +39,81 @@ export default function PostureHistory() {
     week: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     month: Array.from({length: 30}, (_, i) => i + 1),
     year: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  }
+
+  // 添加历史会话数据
+  const historicalSessions: PostureSession[] = [
+    {
+      date: "Today",
+      score: 88,
+      duration: 45,
+      improvement: 5
+    },
+    {
+      date: "Yesterday",
+      score: 85,
+      duration: 30,
+      improvement: 3
+    },
+    {
+      date: "2 days ago",
+      score: 82,
+      duration: 60,
+      improvement: 4
+    },
+    {
+      date: "3 days ago",
+      score: 78,
+      duration: 40,
+      improvement: 2
+    }
+  ]
+
+  // 更新趋势数据结构
+  const trendData = {
+    week: [
+      { name: 'Mon', average: 65, peak: 75, lowest: 60 },
+      { name: 'Tue', average: 68, peak: 78, lowest: 62 },
+      { name: 'Wed', average: 70, peak: 82, lowest: 65 },
+      { name: 'Thu', average: 72, peak: 85, lowest: 68 },
+      { name: 'Fri', average: 75, peak: 88, lowest: 70 },
+      { name: 'Sat', average: 78, peak: 90, lowest: 73 },
+      { name: 'Sun', average: 80, peak: 92, lowest: 75 },
+    ],
+    month: [
+      { name: 'Week 1', average: 65, peak: 75, lowest: 60 },
+      { name: 'Week 2', average: 70, peak: 82, lowest: 65 },
+      { name: 'Week 3', average: 75, peak: 88, lowest: 70 },
+      { name: 'Week 4', average: 80, peak: 92, lowest: 75 },
+    ],
+    year: [
+      { name: 'Jan', average: 60, peak: 70, lowest: 55 },
+      { name: 'Feb', average: 65, peak: 75, lowest: 60 },
+      { name: 'Mar', average: 70, peak: 82, lowest: 65 },
+      { name: 'Apr', average: 72, peak: 85, lowest: 68 },
+      { name: 'May', average: 75, peak: 88, lowest: 70 },
+      { name: 'Jun', average: 78, peak: 90, lowest: 73 },
+      { name: 'Jul', average: 80, peak: 92, lowest: 75 },
+      { name: 'Aug', average: 82, peak: 94, lowest: 77 },
+      { name: 'Sep', average: 85, peak: 95, lowest: 80 },
+      { name: 'Oct', average: 87, peak: 96, lowest: 82 },
+      { name: 'Nov', average: 88, peak: 97, lowest: 83 },
+      { name: 'Dec', average: 90, peak: 98, lowest: 85 },
+    ],
+  }
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background border rounded-lg p-3 shadow-lg">
+          <p className="font-medium">{label}</p>
+          <p className="text-sm text-green-500">Peak: {payload[0].value}%</p>
+          <p className="text-sm text-blue-500">Average: {payload[1].value}%</p>
+          <p className="text-sm text-yellow-500">Lowest: {payload[2].value}%</p>
+        </div>
+      )
+    }
+    return null
   }
 
   return (
@@ -64,31 +150,104 @@ export default function PostureHistory() {
             </Select>
           </CardHeader>
           <CardContent>
-            <div className="h-[200px] w-full">
-              <div className="flex h-full items-end gap-2">
-                {chartData[period].map((value, index) => (
-                  <TooltipProvider key={index}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex-1 flex flex-col items-center gap-2">
-                          <div 
-                            className="w-full bg-primary/20 rounded-sm" 
-                            style={{ height: `${value}%` }}
-                          >
-                            <div 
-                              className="w-full bg-primary rounded-sm transition-all duration-500" 
-                              style={{ height: `${value}%` }}
-                            />
-                          </div>
-                          <span className="text-xs text-muted-foreground">{labels[period][index]}</span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Score: {value}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ))}
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={trendData[period]}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id="colorPeak" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#22c55e" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorAvg" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorLow" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#eab308" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#eab308" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis domain={[0, 100]} />
+                  <RechartsTooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Area 
+                    type="monotone" 
+                    dataKey="peak" 
+                    stroke="#22c55e" 
+                    fillOpacity={1}
+                    fill="url(#colorPeak)"
+                    name="Peak Score"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="average" 
+                    stroke="#3b82f6" 
+                    fillOpacity={1}
+                    fill="url(#colorAvg)"
+                    name="Average Score"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="lowest" 
+                    stroke="#eab308" 
+                    fillOpacity={1}
+                    fill="url(#colorLow)"
+                    name="Lowest Score"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Sessions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {historicalSessions.map((session, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{session.date}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {session.duration} minutes
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold">{session.score}%</p>
+                    <p className="text-sm text-green-500">
+                      +{session.improvement}%
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Daily Patterns</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Best performance time:</span>
+                <span className="font-medium text-foreground">Afternoon</span>
+              </div>
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Average session duration:</span>
+                <span className="font-medium text-foreground">43.75 mins</span>
+              </div>
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Weekly improvement:</span>
+                <span className="font-medium text-green-500">+14%</span>
               </div>
             </div>
           </CardContent>

@@ -26,6 +26,16 @@ export default function NavigationLayout({ children }: NavigationLayoutProps) {
             <Home className="w-5 h-5" />
             <span className="text-xs mt-1">Home</span>
           </Link>
+
+          <Link 
+            href="/activity" 
+            className={`p-2 flex flex-col items-center ${
+              pathname === '/activity' ? 'text-primary' : 'text-muted-foreground'
+            }`}
+          >
+            <LineChart className="w-5 h-5" />
+            <span className="text-xs mt-1">Activity</span>
+          </Link>
           
           <Link 
             href="/posture-monitoring" 
@@ -37,15 +47,6 @@ export default function NavigationLayout({ children }: NavigationLayoutProps) {
             <span className="text-xs mt-1">Posture</span>
           </Link>
           
-          <Link 
-            href="/activity" 
-            className={`p-2 flex flex-col items-center ${
-              pathname === '/activity' ? 'text-primary' : 'text-muted-foreground'
-            }`}
-          >
-            <LineChart className="w-5 h-5" />
-            <span className="text-xs mt-1">Activity</span>
-          </Link>
         </div>
       </nav>
     </div>

@@ -137,7 +137,7 @@ export default function Activity() {
 
       {/* Daily Goals */}
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold">Today&apos;s Goals</h2>
+        <h2 className="text-2xl font-bold">Today&apos;s Goals</h2>
         <div className="grid grid-cols-3 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
