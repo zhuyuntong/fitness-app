@@ -5,16 +5,15 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { 
-  User, Play, Dumbbell, Zap, ChevronDown, ChevronUp,
-  Settings, History, Video, Activity, Award, Calendar, Clock, Flame, TrendingUp
-} from 'lucide-react'
+import { User, Play, Dumbbell, Zap, ChevronDown, ChevronUp, Settings, History, Video, Activity, Award, Calendar, Clock, Flame, TrendingUp } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import EnhancedCommunitySection from "./enhanced-community-section"
+import { QuickNavSidebar } from "./quick-nav-sidebar"
 
 export default function HomePage() {
   const [isProgressExpanded, setIsProgressExpanded] = useState(false)
@@ -38,7 +37,6 @@ export default function HomePage() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
 
-  // 新增：仪表板引用
   const dashboardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -52,12 +50,10 @@ export default function HomePage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [lastScrollY])
 
-  // 新增：滚动到仪表板部分
   const scrollToDashboard = () => {
     dashboardRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  // 检查 URL 是否包含 dashboard 锚点
   useEffect(() => {
     if (window.location.hash === '#dashboard') {
       setTimeout(scrollToDashboard, 100)
@@ -74,7 +70,7 @@ export default function HomePage() {
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    // 模拟数据刷新
+    // Simulate data refresh
     await new Promise(resolve => setTimeout(resolve, 1500))
     setIsRefreshing(false)
   }
@@ -129,7 +125,7 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground">Ready for your next workout?</p>
           </div>
 
-          <Card className="bg-primary/5">
+          <Card className="bg-primary/5" id="progress">
             <CardContent className="p-4">
               <div className="flex justify-between items-center mb-2 cursor-pointer"
                    onClick={() => setIsProgressExpanded(!isProgressExpanded)}>
@@ -160,7 +156,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card id="workout">
             <CardContent className="p-4 space-y-3">
               <div className="flex justify-between items-center cursor-pointer"
                    onClick={() => setIsWorkoutExpanded(!isWorkoutExpanded)}>
@@ -180,7 +176,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <section className="space-y-4">
+          <section id="recommended" className="space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="font-medium">Recommended for You</h3>
               <Button variant="ghost" size="sm" className="text-xs">
@@ -248,9 +244,9 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </section>
+
         </section>
 
-        {/* 新增：Dashboard 部分 */}
         <section ref={dashboardRef} className="mt-12 space-y-6" id="dashboard">
           <h2 className="text-2xl font-bold">Your Dashboard</h2>
           
@@ -325,17 +321,23 @@ export default function HomePage() {
             </CardContent>
           </Card>
         </section>
-      </div>
 
-      <Button 
-        className={`fixed right-4 transition-all duration-300 shadow-lg bg-primary
-          ${showFab ? 'bottom-20 opacity-100' : '-bottom-20 opacity-0'}
-          rounded-full w-12 h-12 hover:scale-110`}
-        size="icon"
-        onClick={() => window.location.href = '/workout-selection'}
-      >
-        <Play className="w-6 h-6" />
-      </Button>
+        <section className="mt-12 space-y-6" id="community">
+          <h2 className="text-2xl font-bold">Community</h2>
+          <EnhancedCommunitySection />
+        </section>
+
+        <QuickNavSidebar />
+        <Button 
+          className={`fixed right-4 transition-all duration-300 shadow-lg bg-primary
+            ${showFab ? 'bottom-20 opacity-100' : '-bottom-20 opacity-0'}
+            rounded-full w-12 h-12 hover:scale-110`}
+          size="icon"
+          onClick={() => window.location.href = '/workout-selection'}
+        >
+          <Play className="w-6 h-6" />
+        </Button>
+      </div>
     </div>
   )
 }
