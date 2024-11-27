@@ -323,7 +323,7 @@ export default function HomePage() {
         </section>
 
         <section className="mt-12 space-y-6" id="community">
-          <h2 className="text-2xl font-bold">Community</h2>
+          {/* <h2 className="text-2xl font-bold">Community</h2> */}
           <EnhancedCommunitySection />
         </section>
 
