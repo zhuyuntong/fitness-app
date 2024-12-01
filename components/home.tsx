@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { User, Play, Dumbbell, Zap, ChevronDown, ChevronUp, Settings, History, Video, Activity, Award, Calendar, Clock, Flame, TrendingUp } from 'lucide-react'
+import { User, Play, Dumbbell, Zap, ChevronDown, ChevronUp, Settings, Video, Activity, Award, Calendar, Clock, Flame, TrendingUp, LineChart } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,7 +65,7 @@ export default function HomePage() {
     { icon: <Dumbbell className="w-5 h-5" />, label: "Workouts", href: "/workout-selection" },
     { icon: <Video className="w-5 h-5" />, label: "Video Library", href: "/video-library" },
     { icon: <Activity className="w-5 h-5" />, label: "Posture Monitor", href: "/posture-monitoring" },
-    { icon: <History className="w-5 h-5" />, label: "History", href: "/history" },
+    { icon: <LineChart className="w-5 h-5" />, label: "Activity", href: "/activity" },
   ]
 
   const handleRefresh = async () => {
