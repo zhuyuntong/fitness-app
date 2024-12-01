@@ -7,8 +7,8 @@ interface User {
 }
 
 const DEFAULT_USER: User = {
-  name: "John Zhu",
-  email: "kakava@umich.edu",
+  name: "Alex.A",
+  email: "alex@lockedin.com",
   image: undefined // 如果有头像图片可以在这里添加URL
 }
 
