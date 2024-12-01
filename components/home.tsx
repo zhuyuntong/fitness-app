@@ -16,7 +16,7 @@ import EnhancedCommunitySection from "./enhanced-community-section"
 import { QuickNavSidebar } from "./quick-nav-sidebar"
 
 export default function HomePage() {
-  const [isProgressExpanded, setIsProgressExpanded] = useState(false)
+  // const [isProgressExpanded, setIsProgressExpanded] = useState(false)
   const [isWorkoutExpanded, setIsWorkoutExpanded] = useState(true)
   const [recommendedVideos] = useState([
     {
@@ -125,7 +125,7 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground">Ready for your next workout?</p>
           </div>
 
-          <Card className="bg-primary/5" id="progress">
+          {/* <Card className="bg-primary/5" id="progress">
             <CardContent className="p-4">
               <div className="flex justify-between items-center mb-2 cursor-pointer"
                    onClick={() => setIsProgressExpanded(!isProgressExpanded)}>
@@ -154,7 +154,7 @@ export default function HomePage() {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           <Card id="workout">
             <CardContent className="p-4 space-y-3">
