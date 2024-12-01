@@ -37,8 +37,8 @@ export default function ProfilePage() {
             </svg>
           </div>
           <div>
-            <h1 className="text-2xl font-bold">John Zhu</h1>
-            <p className="text-gray-500">example@usc.edu</p>
+            <h1 className="text-2xl font-bold">Alex.A</h1>
+            <p className="text-gray-500">Alex@lockedin.com</p>
           </div>
         </div>
 
