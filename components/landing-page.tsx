@@ -49,9 +49,9 @@ export default function LandingPage() {
         <DropdownMenuContent align="end" className="w-56">
           <div className="flex items-center justify-start gap-2 p-2">
             <div className="flex flex-col space-y-1 leading-none">
-              <p className="font-medium">John Zhu</p>
+              <p className="font-medium">Alex.A</p>
               <p className="w-[200px] truncate text-sm text-muted-foreground">
-                kakava@umich.edu
+                Alex@lockedin.com
               </p>
             </div>
           </div>
@@ -114,9 +114,9 @@ export default function LandingPage() {
               <nav className="flex flex-col">
                 <div className="flex items-center justify-start gap-2 p-4 border-b">
                   <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">John Zhu</p>
+                    <p className="font-medium">Alex.A</p>
                     <p className="w-[200px] truncate text-sm text-muted-foreground">
-                      kakava@umich.edu
+                      Alex@lockedin.com
                     </p>
                   </div>
                 </div>
